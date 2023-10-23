@@ -6,15 +6,17 @@ const Register = async (req, res) => {
 
   let user = await User.findOne({ email });
 
-  if (user) return res.send("testingUser");
-
-  await User.create({
-    username,
-    email,
-    password,
-    role,
-  });
-  res.send(`Account created successfully [${username}]`);
+  if (user) {
+    res.send(`testingUser`);
+  } else {
+    await User.create({
+      username,
+      email,
+      password,
+      role,
+    });
+    res.send(`Account created successfully [${username}]`);
+  }
 };
 
 const registerPage = (req, res) => {
@@ -22,7 +24,7 @@ const registerPage = (req, res) => {
 };
 
 const loginPage = (req, res) => {
-// if(req.cookies.token) return res.send("You are alredy logged")
+  // if(req.cookies.token) return res.send("You are alredy logged")
   res.render("login");
 };
 
@@ -36,19 +38,18 @@ const Login = async (req, res) => {
     return res.send("Invalid Credentials.");
 
   let id = jwt.sign({ id: user.role }, "sdfguikmnfchjwio");
-  
+
   res
     .cookie("token", id, { httpOnly: true })
     .send(`Welcome User [${user.username}]`);
 };
 
-const deleteUser=async(req,res)=>{
-    let user=await User.findByIdAndDelete(req.params.id)
+const deleteUser = async (req, res) => {
+  let user = await User.findByIdAndDelete(req.params.id);
 
-    if (!user) return res.send("User Not Found");
+  if (!user) return res.send("User Not Found");
 
-    res.send(`user deleted [${user.username}]`)
+  res.send(`user deleted [${user.username}]`);
+};
 
-}
-
-module.exports = { Register, registerPage, loginPage, Login,deleteUser };
+module.exports = { Register, registerPage, loginPage, Login, deleteUser };
