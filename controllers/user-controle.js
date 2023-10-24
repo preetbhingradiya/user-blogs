@@ -51,4 +51,5 @@ const deleteUser = async (req, res) => {
   res.send(`user deleted [${user.username}]`);
 };
 
+
 module.exports = { Register, registerPage, loginPage, Login, deleteUser };
