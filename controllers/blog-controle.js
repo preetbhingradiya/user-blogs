@@ -1,14 +1,10 @@
 const Blog = require("../models/Blog.schema");
-const jwt = require("jsonwebtoken");
 const User = require("../models/user.schema");
 
 const blogPage = async (req, res) => {
-  let { token } = req.cookies;
+  let { id,role } = req.cookies;
 
-  const decode = jwt.verify(token, "sdfguikmnfchjwio");
-  req.data = await User.findOne({ role: decode.id });
-
-  if (token && req.data.role == "admin") {
+  if (id && role=="admin" ) {
     res.render("blog");
   } else {
     res.send("You are not authorized to access this page");
@@ -16,13 +12,13 @@ const blogPage = async (req, res) => {
 };
 
 const addBlog = async (req, res) => {
-  let { token } = req.cookies;
-  const decode = jwt.verify(token, "sdfguikmnfchjwio");
-  req.data = await User.findOne({ role: decode.id });
+
+  let {id}=req.cookies
+  let user=await User.findById(id)
 
   let { title, content, category, image } = req.body;
-   await Blog.create({ title, content, category, image, author:req.data.username });
-  res.send(`blog created by [${req.data.username}]`);
+  let blog=await Blog.create({ title, content, category, image,author:user.username });
+  res.cookie("blogId",blog._id).send(`blog created by ${user.username}`);
 };
 
 const allBlog=async(req,res)=>{
