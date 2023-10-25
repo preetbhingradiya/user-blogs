@@ -1,5 +1,7 @@
 const Blog = require("../models/Blog.schema");
 const User = require("../models/user.schema");
+const Fuse = require("fuse.js");
+
 
 const blogPage = async (req, res) => {
   let { id, role } = req.cookies;
@@ -81,4 +83,26 @@ const Like=async(req,res)=>{
   res.send(blog)
 }
 
-module.exports = { blogPage, addBlog, allBlog, updateBlog,deleteBlog,blogs,singleBlog,Like };
+const comment=async(req,res)=>{
+  let {id}=req.cookies
+  let user=await User.findById(id)
+
+  let blog=await Blog.findById(req.params.id)
+  blog.comments.push({text:req.body.text,username:user.username})
+  await blog.save()
+  res.send(blog)
+}
+
+const Search=async(req,res)=>{
+  let query = req.query.blogs;
+  const blogs = await Blog.find();
+
+  const options = {
+    keys: ["author", "category", "title"],
+  };
+  const fuse = new Fuse(blogs, options);
+  const result = fuse.search(query);
+  res.send(result)
+}
+
+module.exports = { blogPage, addBlog, allBlog, updateBlog,deleteBlog,blogs,singleBlog,Like,comment,Search };

@@ -1,5 +1,5 @@
 const express=require("express")
-const {blogPage, addBlog, allBlog, updateBlog, deleteBlog, blogDetaile, blogs, singleBlog, Like} = require("../controllers/blog-controle")
+const {blogPage, addBlog, allBlog, updateBlog, deleteBlog, blogDetaile, blogs, singleBlog, Like, comment, Search} = require("../controllers/blog-controle")
 const information = require("../middleware/detailes")
 
 
@@ -13,6 +13,7 @@ blog.patch('/edit/:id',updateBlog)
 blog.delete('/delete/:id',deleteBlog)
 blog.get('/singleBlog/:id',singleBlog)
 blog.patch('/like/:id',Like)
-// blog.patch('/comment/:id',comment)
+blog.patch('/comment/:id',comment)
+blog.get(`/search`,Search)
 
 module.exports=blog
