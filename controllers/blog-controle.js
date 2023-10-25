@@ -42,13 +42,11 @@ const blogs=async(req,res)=>{
 }
 
 const updateBlog = async (req, res) => {
-  // res.send('erni')
   let {id}=req.cookies
   let user=await User.findById(id)
 
   if (user.role == "admin") {
     const blogId = req.params.id;
-    console.log("id",id ,"blogId", blogId,"user",user);
     let { title, content, category, image } = req.body;
     let updateBLog = await Blog.findByIdAndUpdate(blogId, { title,content,category,image });
     updateBLog=await updateBLog.save();
@@ -68,4 +66,19 @@ const deleteBlog=async(req,res)=>{
   }
 }
 
-module.exports = { blogPage, addBlog, allBlog, updateBlog,deleteBlog,blogs };
+const singleBlog=async(req,res)=>{
+  let singleBlog=await Blog.findById(req.params.id)
+  res.render('singleBlogPage',{singleBlog})
+}
+
+const Like=async(req,res)=>{
+  let {id}=req.cookies
+  let user=await User.findById(id)
+
+  let blog=await Blog.findById(req.params.id)
+  blog.likedBy.push({username:user.username})
+  await blog.save()
+  res.send(blog)
+}
+
+module.exports = { blogPage, addBlog, allBlog, updateBlog,deleteBlog,blogs,singleBlog,Like };

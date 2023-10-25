@@ -32,6 +32,10 @@
             let div=document.createElement("div")
             div.setAttribute('class',"list")
 
+            div.addEventListener("click",(e)=>{
+              window.location.href=`/blog/singleBlog/${ele._id}`
+            })
+
             div.append(img,title)
     
             document.getElementById("parent-box").append(div)

@@ -13,8 +13,13 @@ app.use(cookie())
 app.set("view engine", "ejs");
 app.use(express.urlencoded({extended:true}))
 
+app.get('/',(req,res)=>{
+    res.send("Welcome to the movie API")
+})
+
+
 app.use(user)
-app.use(blog)
+app.use("/blog",blog)
 
 app.listen(8090,()=>{
     console.log("connect to port 8090");
