@@ -23,7 +23,7 @@ const addBlog = async (req, res) => {
     image,
     author: user.username,
   });
-  res.cookie("blogId", blog._id).send(`blog created by ${user.username}`);
+  res.cookie("blogId", blog.id).send(`blog created by ${user.username}`);
 };
 
 const allBlog = async (req, res) => {
@@ -37,32 +37,27 @@ const allBlog = async (req, res) => {
   }
 };
 
-const blogDetaile=async(req,res)=>{
-  res.render("blogpage")
-}
-
 const blogs=async(req,res)=>{
-  let data=await Blog.find()
-  res.json(data)
+    res.render("blogpage")
 }
 
 const updateBlog = async (req, res) => {
-  res.send('erni')
-  // let {id}=req.cookies
-  // let user=await User.findById(id)
+  // res.send('erni')
+  let {id}=req.cookies
+  let user=await User.findById(id)
 
-  // if (user.role == "admin") {
-  //   const blogId = req.params.id;
-  //   let { title, content, category, image } = req.body;
-  //   let updateBLog = await Blog.findByIdAndUpdate(blogId, { title,content,category,image });
-  //   updateBLog=await updateBLog.save();
-  //   res.send(updateBLog)
+  if (user.role == "admin") {
+    const blogId = req.params.id;
+    console.log("id",id ,"blogId", blogId,"user",user);
+    let { title, content, category, image } = req.body;
+    let updateBLog = await Blog.findByIdAndUpdate(blogId, { title,content,category,image });
+    updateBLog=await updateBLog.save();
 
-  //   // let blog = await Blog.find();
-  //   // res.status(200).send(blog);
-  // } else {
-  //   res.status(400).send("only admin can update blog");
-  // }
+    let blog = await Blog.find();
+    res.status(200).send(blog);
+  } else {
+    res.status(400).send("only admin can update blog");
+  }
 };
 
 const deleteBlog=async(req,res)=>{
@@ -73,4 +68,4 @@ const deleteBlog=async(req,res)=>{
   }
 }
 
-module.exports = { blogPage, addBlog, allBlog, updateBlog,deleteBlog,blogDetaile,blogs };
+module.exports = { blogPage, addBlog, allBlog, updateBlog,deleteBlog,blogs };

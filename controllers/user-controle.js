@@ -32,7 +32,7 @@ const Login = async (req, res) => {
   let user = await User.findOne({ email });
 
   if (!user) {
-    res.send("User Not Found");
+    res.send("Invalid Credentials.");
   } else if (user.email !== email || user.password !== password) {
     res.send("Invalid Credentials.");
   } else {
